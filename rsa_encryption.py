@@ -12,16 +12,32 @@ from cryptography.hazmat.primitives import serialization
 # RSAEncryption
 #-------------------------------------------------------------------------------
 class RSAEncryption():
-    """RSA is a public-key algorithm for encrypting and signing messages."""
+    """RSA is a asymmetric algorithm for encrypting and signing messages."""
     
+    #---------------------------------------------------------------------------
+    # RSAEncryption
+    #---------------------------------------------------------------------------
     def generate_rsa_keypair(self, bits=2048):
-        return generate_private_key(
+        """
+        Returns private_key and public_key
+
+        Generates a new RSA private key using the provided backend and key_size.
+        """
+        private_key = generate_private_key(
             public_exponent=65537,
             key_size=bits,
             backend=default_backend()
         )
 
+        return private_key, private_key.public_key()
+
+    #---------------------------------------------------------------------------
+    # load_private_key
+    #---------------------------------------------------------------------------
     def load_private_key(self, pem_file_path):
+        """
+        If you already have an on-disk key in the PEM format.
+        """
         with open(pem_file_path, "rb") as key_file:
             private_key = serialization.load_pem_private_key(
                 key_file.read(),
@@ -31,7 +47,13 @@ class RSAEncryption():
 
         return private_key
 
+    #---------------------------------------------------------------------------
+    # load_public_key
+    #---------------------------------------------------------------------------
     def load_public_key(self, pem_file_path):
+        """
+        If you already have an on-disk key in the PEM format.
+        """
         with open(pem_file_path, "rb") as key_file:
             public_key = serialization.load_pem_public_key(
                 key_file.read(),
@@ -40,7 +62,10 @@ class RSAEncryption():
 
         return public_key
 
-    def encrypt(self, public_key, message):
+    #---------------------------------------------------------------------------
+    # get_encrypt
+    #---------------------------------------------------------------------------
+    def get_encrypt(self, public_key, message):
         """
         Encryption using a secure padding and hash function.
         """
@@ -53,7 +78,10 @@ class RSAEncryption():
             )
         )
 
-    def decrypt(self, private_key, cipher_pass):
+    #---------------------------------------------------------------------------
+    # get_decrypt
+    #---------------------------------------------------------------------------
+    def get_decrypt(self, private_key, cipher_pass):
         """
         Once you have an encrypted message, it can be decrypted using the private key.
         """
