@@ -1,15 +1,15 @@
 import unittest
 from unittest import TestCase
 import re
-from encryption import AsymmetricEncryption
+from rsa_encryption import RSAEncryption
 
 #-------------------------------------------------------------------------------
-# TestAsymmetricEncryption
+# TestRSAEncryption
 #-------------------------------------------------------------------------------
-class TestAsymmetricEncryption(TestCase):
+class TestRSAEncryption(TestCase):
 
     def setUp(self):
-        self.crypto = AsymmetricEncryption()
+        self.crypto = RSAEncryption()
         self.private_key = self.crypto.generate_rsa_keypair()
         self.public_key = self.private_key.public_key()
         

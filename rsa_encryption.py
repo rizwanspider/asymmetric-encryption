@@ -9,9 +9,10 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
 #-------------------------------------------------------------------------------
-# AsymmetricEncryption
+# RSAEncryption
 #-------------------------------------------------------------------------------
-class AsymmetricEncryption():
+class RSAEncryption():
+    """RSA is a public-key algorithm for encrypting and signing messages."""
     
     def generate_rsa_keypair(self, bits=2048):
         return generate_private_key(
