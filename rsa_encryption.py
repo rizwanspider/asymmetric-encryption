@@ -1,3 +1,4 @@
+import os
 from cryptography.hazmat.primitives.asymmetric.rsa import (
     generate_private_key,
     RSAPublicKey,
@@ -7,6 +8,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
+from utils.file_io import write_bytes
 
 #-------------------------------------------------------------------------------
 # RSAEncryption
@@ -15,7 +17,7 @@ class RSAEncryption():
     """RSA is a asymmetric algorithm for encrypting and signing messages."""
     
     #---------------------------------------------------------------------------
-    # RSAEncryption
+    # generate_rsa_keypair
     #---------------------------------------------------------------------------
     def generate_rsa_keypair(self, bits=2048):
         """
@@ -30,6 +32,51 @@ class RSAEncryption():
         )
 
         return private_key, private_key.public_key()
+
+    #---------------------------------------------------------------------------
+    # write_keys
+    #---------------------------------------------------------------------------
+    def write_keys(self, private_key, public_key, path):
+        self.path = path
+        self.write_private_key(private_key)
+        self.write_public_key(public_key)
+
+    #---------------------------------------------------------------------------
+    # serialize_private_key
+    #---------------------------------------------------------------------------
+    def serialize_private_key(self, private_key):
+        return private_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption()
+        )
+    
+    #---------------------------------------------------------------------------
+    # serialize_public_key
+    #---------------------------------------------------------------------------
+    def serialize_public_key(self, public_key):
+        return public_key.public_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo
+        )
+
+    #---------------------------------------------------------------------------
+    # write_private_key
+    #---------------------------------------------------------------------------
+    def write_private_key(self, private_key):
+        filename = 'private_noshare.pem'
+        path = os.path.join(self.path, filename)
+        serial_private = self.serialize_private_key(private_key)
+        write_bytes(serial_private, path)
+    
+    #---------------------------------------------------------------------------
+    # write_public_key
+    #---------------------------------------------------------------------------
+    def write_public_key(self, public_key):
+        filename = 'public_shared.pem'
+        path = os.path.join(self.path, filename)
+        serial_pub = self.serialize_public_key(public_key)
+        write_bytes(serial_pub, path)
 
     #---------------------------------------------------------------------------
     # load_private_key
